@@ -5,10 +5,12 @@ import Detail from "./pages/detail/Detail";
 import Search from "./pages/search/Search";
 import Quiz from "./pages/quiz/Quiz";
 import Result from "./pages/result/Result";
+import Header from "./components/Header";
 
 const Router = () => {
   return (
     <HashRouter>
+      <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/start" element={<Start />} />
