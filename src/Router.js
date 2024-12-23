@@ -10,8 +10,8 @@ const Router = () => {
   return (
     <HashRouter>
       <Routes>
-        <Route path="/" element={<Start />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/start" element={<Start />} />
         <Route path="/Detail" element={<Detail />} />
         <Route path="/search" element={<Search />} />
         <Route path="/quiz" element={<Quiz />} />
