@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
 import { YoriData } from "../../api";
+import styled from "styled-components";
+
+const Wrap = styled.div``;
+
+const LevelWrap = styled.div``;
+
+const IconWrap = styled.div``;
 
 const Start = () => {
   const [yori, setYori] = useState("");
@@ -15,7 +22,13 @@ const Start = () => {
       }
     })();
   }, []);
-  return;
+  return (
+    <Wrap>
+      <LevelWrap>
+        <IconWrap></IconWrap>
+      </LevelWrap>
+    </Wrap>
+  );
 };
 
 export default Start;
