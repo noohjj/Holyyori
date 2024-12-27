@@ -11,6 +11,51 @@ const Wrap = styled.div`
   }
 `;
 
+const LevelWrap = styled.div`
+  width: 100%;
+  max-width: 410px;
+  height: 220px;
+  background-color: #f6cd9a;
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const PointWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin-right: 10px;
+`;
+
+const PointText = styled.div`
+  font-size: 20px;
+  font-weight: 700;
+`;
+
+const Lev = styled.div`
+  font-size: 36px;
+  font-weight: bold;
+`;
+
+const YoriPoint = styled.div`
+  font-size: 16px;
+  letter-spacing: 0.3;
+  font-family: "Cantata One", serif;
+`;
+
+const Level = styled.div`
+  width: 100%;
+  max-width: 180px;
+  height: 100%;
+  max-height: 180px;
+  background-color: white;
+  position: relative;
+  border-radius: 20px;
+`;
+
 const ConWrap = styled.div`
   margin-top: 20px;
   display: grid;
@@ -24,6 +69,7 @@ const Con = styled.div`
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
+  padding: 10px;
 `;
 
 const RecipeImage = styled.img`
@@ -39,23 +85,8 @@ const RecipeTitle = styled.div`
   font-weight: bold;
   color: #333333;
   padding: 10px;
+  margin-top: 10px;
 `;
-
-const extractImageFromContent = (htmlContent) => {
-  try {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(htmlContent, "text/html");
-    const imgTag = doc.querySelector("img");
-
-    // 이미지 태그가 있으면 src 반환, 없으면 기본 이미지 반환
-    return imgTag && imgTag.src
-      ? imgTag.src
-      : "https://via.placeholder.com/150";
-  } catch (error) {
-    console.error("이미지 추출 중 에러:", error);
-    return "https://via.placeholder.com/150"; // 기본 이미지
-  }
-};
 
 const Start = () => {
   const [yori, setYori] = useState([]);
@@ -64,9 +95,11 @@ const Start = () => {
     (async () => {
       try {
         const { data } = await YoriData(); // API 데이터 호출
+        console.log("API 데이터:", data); // API 데이터 구조 확인
         const processedData = data.map((item) => ({
           title: item.제목 || "제목 없음",
-          image: extractImageFromContent(item.내용), // 내용에서 이미지 추출
+          image: item.이미지 || "https://via.placeholder.com/150",
+          content: item.내용 || "내용 없음",
         }));
         setYori(processedData);
       } catch (error) {
@@ -75,12 +108,22 @@ const Start = () => {
     })();
   }, []);
 
+  const randomItems = yori.sort(() => 0.5 - Math.random()).slice(0, 6); // 랜덤으로 6개만 추출
+
   return (
     <Wrap>
+      <LevelWrap>
+        <Level></Level>
+        <PointWrap>
+          <PointText>당신의 요리 레벨은</PointText>
+          <Lev>LV.1</Lev>
+          <YoriPoint>YORI POINT : 2000</YoriPoint>
+        </PointWrap>
+      </LevelWrap>
       <h3>추천 요리</h3>
       <ConWrap>
-        {yori.length > 0 ? (
-          yori.map((item, index) => (
+        {randomItems.length > 0 ? (
+          randomItems.map((item, index) => (
             <Con key={index}>
               <RecipeImage src={item.image} alt={item.title} />
               <RecipeTitle>{item.title}</RecipeTitle>

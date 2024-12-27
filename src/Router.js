@@ -6,6 +6,7 @@ import Search from "./pages/search/Search";
 import Quiz from "./pages/quiz/Quiz";
 import Result from "./pages/result/Result";
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 const Router = () => {
   return (
@@ -14,11 +15,12 @@ const Router = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/start" element={<Start />} />
-        <Route path="/Detail" element={<Detail />} />
+        <Route path="/Detail/:id" element={<Detail />} />
         <Route path="/search" element={<Search />} />
         <Route path="/quiz" element={<Quiz />} />
         <Route path="/result" element={<Result />} />
       </Routes>
+      <Footer />
     </HashRouter>
   );
 };
