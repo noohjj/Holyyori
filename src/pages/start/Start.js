@@ -44,6 +44,7 @@ const YoriPoint = styled.div`
   font-size: 16px;
   letter-spacing: 0.3;
   font-family: "Cantata One", serif;
+  color: #292e41;
 `;
 
 const Level = styled.div`
