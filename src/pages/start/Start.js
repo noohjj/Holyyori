@@ -11,19 +11,6 @@ const Wrap = styled.div`
   }
 `;
 
-const LevelWrap = styled.div`
-  width: 100%;
-  max-width: 410px;
-  height: 220px;
-  border-radius: 20px;
-  background-color: #f4ddc0;
-  padding: 20px;
-`;
-
-const IconWrap = styled.div``;
-
-const PointWrap = styled.div``;
-
 const ConWrap = styled.div`
   margin-top: 20px;
   display: grid;
@@ -40,9 +27,11 @@ const Con = styled.div`
 `;
 
 const RecipeImage = styled.img`
-  width: 100%;
+  width: 150px;
   height: 150px;
   object-fit: cover;
+  border-radius: 10px; /* 필요 시 테두리 둥글게 */
+  margin: 0 auto; /* 가운데 정렬 */
 `;
 
 const RecipeTitle = styled.div`
@@ -52,14 +41,20 @@ const RecipeTitle = styled.div`
   padding: 10px;
 `;
 
-// HTML에서 요약 정보 추출 함수
-const extractSummary = (content) => {
-  if (!content) return "요약 정보 없음"; // content가 없을 경우 기본값 반환
-  const cleanContent = content
-    .replace(/<br>/g, "\n")
-    .replace(/(<([^>]+)>)/gi, "");
-  const summary = cleanContent.split("||")[1]?.trim(); // 두 번째 섹션 추출
-  return summary ? summary.split(".")[0] + "..." : "요약 정보 없음";
+const extractImageFromContent = (htmlContent) => {
+  try {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlContent, "text/html");
+    const imgTag = doc.querySelector("img");
+
+    // 이미지 태그가 있으면 src 반환, 없으면 기본 이미지 반환
+    return imgTag && imgTag.src
+      ? imgTag.src
+      : "https://via.placeholder.com/150";
+  } catch (error) {
+    console.error("이미지 추출 중 에러:", error);
+    return "https://via.placeholder.com/150"; // 기본 이미지
+  }
 };
 
 const Start = () => {
@@ -70,9 +65,8 @@ const Start = () => {
       try {
         const { data } = await YoriData(); // API 데이터 호출
         const processedData = data.map((item) => ({
-          title: item.title || "제목 없음", // title이 없을 경우 기본값
-          image: item.image || "https://via.placeholder.com/150", // 이미지가 없을 경우 기본값
-          summary: extractSummary(item.content), // 요약 정보 추출
+          title: item.제목 || "제목 없음",
+          image: extractImageFromContent(item.내용), // 내용에서 이미지 추출
         }));
         setYori(processedData);
       } catch (error) {
@@ -83,19 +77,18 @@ const Start = () => {
 
   return (
     <Wrap>
-      <LevelWrap>
-        <IconWrap></IconWrap>
-        <PointWrap></PointWrap>
-      </LevelWrap>
       <h3>추천 요리</h3>
       <ConWrap>
-        {yori.map((item, index) => (
-          <Con key={index}>
-            <RecipeImage src={item.image} alt={item.title} />
-            <RecipeTitle>{item.title}</RecipeTitle>
-            <p>{item.summary}</p>
-          </Con>
-        ))}
+        {yori.length > 0 ? (
+          yori.map((item, index) => (
+            <Con key={index}>
+              <RecipeImage src={item.image} alt={item.title} />
+              <RecipeTitle>{item.title}</RecipeTitle>
+            </Con>
+          ))
+        ) : (
+          <p>추천 요리가 없습니다.</p>
+        )}
       </ConWrap>
     </Wrap>
   );
