@@ -97,9 +97,16 @@ const Start = () => {
       try {
         const { data } = await YoriData(); // API 데이터 호출
         console.log("API 데이터:", data); // API 데이터 구조 확인
+
+        // 정규식을 사용하여 첫 번째 이미지 URL 추출
+        const extractFirstImage = (content) => {
+          const match = content.match(/<img[^>]+src=["']([^"']+)["']/);
+          return match ? match[1] : "https://via.placeholder.com/150";
+        };
+
         const processedData = data.map((item) => ({
           title: item.제목 || "제목 없음",
-          image: item.이미지 || "https://via.placeholder.com/150",
+          image: extractFirstImage(item.내용), // 첫 번째 이미지 추출
           content: item.내용 || "내용 없음",
         }));
         setYori(processedData);
